@@ -2,8 +2,12 @@ import { Expense } from "../Expense";
 
 type Props = {
   items: Expense[];
+  onDelete: (item: number) => void;
 };
-const ExpenseTable = ({ items }: Props) => {
+const ExpenseTable = ({ items, onDelete }: Props) => {
+  const total = items
+    .reduce((acc, current) => acc + current.amount, 0)
+    .toFixed(2);
   return (
     <table className="table table-hover">
       <thead>
@@ -18,14 +22,27 @@ const ExpenseTable = ({ items }: Props) => {
         {items.map((item) => (
           <tr key={item.id}>
             <td>{item.description}</td>
-            <td>{item.amount}</td>
+            <td>${item.amount.toFixed(2)}</td>
             <td>{item.category}</td>
             <td>
-              <button className="btn btn-outline-danger btn-sm">Delete</button>
+              <button
+                onClick={() => onDelete(item.id)}
+                className="btn btn-outline-danger btn-sm"
+              >
+                Delete
+              </button>
             </td>
           </tr>
         ))}
       </tbody>
+      <tfoot>
+        <tr>
+          <th>Total</th>
+          <th>${total}</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </tfoot>
     </table>
   );
 };
